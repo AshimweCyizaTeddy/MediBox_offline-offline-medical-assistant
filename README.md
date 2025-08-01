@@ -1,7 +1,7 @@
 
 #  MediBox_offline
 
-**MediBox_offline** is a multilingual offline medical assistant that provides quick and reliable medical diagnosis based on symptoms — all without needing an internet connection.
+**MediBox_offline medical assistant** is a multilingual offline medical assistant that provides quick and reliable medical diagnosis based on symptoms — all without needing an internet connection.
 
 ##  Features
 
