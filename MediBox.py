@@ -54,6 +54,12 @@ languages = ["English", "French", "Kiswahili", "Kinyarwanda"]
 current_language = tk.StringVar(value="English")
 
 translations = {
+    "Welcome to MediBox": {
+        "English": "Welcome to MediBox",
+        "French": "Bienvenue sur MediBox",
+        "Kiswahili": "Karibu kwenye MediBox",
+        "Kinyarwanda": "Murakaza neza kuri MediBox"
+    },
     "Enter your symptoms (comma separated):": {
         "English": "Enter your symptoms (comma separated):",
         "French": "Entrez vos symptômes (séparés par des virgules):",
@@ -2037,7 +2043,7 @@ def translate_ui():
     btn_delete.config(text=tr("Delete Selected Record"))
     for col in columns:
         record_table.heading(col, text=tr(col.capitalize()))
-    menu_labels[0].config(text="🏥Welcome to MediBox")
+    menu_labels[0].config(text="🏥" + tr("Welcome to MediBox"))
     menu_labels[1].config(text=tr("Diagnose illnesses based on your symptoms."))
     menu_labels[2].config(text=tr("Click 'Diagnose' to begin."))
 def get_diagnosis(symptom_input, lang):
