@@ -12,7 +12,11 @@ language_map = {
 import tkinter as tk
 from tkinter import ttk
 import pyttsx3
+import threading
 import sqlite3
+
+# Initialize text-to-speech engine
+tts_engine = pyttsx3.init()
 from datetime import datetime
 
 # Initialize main window
@@ -29,6 +33,17 @@ temp_icon.write(base64.b64decode(icon_ico_base64))
 temp_icon.close()
 
 root = tk.Tk()
+
+# Show popup tip about double clicking Diagnose for voice output
+import tkinter.messagebox as messagebox
+
+popup_message = """💡 Double click 'Diagnose' for voice output
+💡 Double-cliquez sur 'Diagnostiquer' pour la sortie vocale
+💡 Bonyeza mara mbili 'Tambua' ili kusikia matokeo
+💡 Kanda kabiri 'Gusuzuma' kugirango wumve igisubizo"""
+
+root.after(500, lambda: messagebox.showinfo('Tip', popup_message))
+
 root.iconbitmap(temp_icon.name)
 root.title("MediBox")
 root.geometry("800x600")
@@ -100,8 +115,8 @@ translations = {
         "Kinyarwanda": "Menya indwara ushingiye ku bimenyetso byawe."
     },
     "Click 'Diagnosis' to begin.": {
-        "English": "Click 'Diagnosis' to begin.",
-        "French": "Cliquez sur 'Diagnostic' pour commencer.",
+        "English": "Click 'Diagnose' to begin.",
+        "French": "Cliquez sur 'Diagnostiquer' pour commencer.",
         "Kiswahili": "Bonyeza 'Tambua Ugonjwa' kuanza.",
         "Kinyarwanda": "Kanda 'Gupima' kugira ngo utangire."
     },
@@ -1859,11 +1874,30 @@ def build_symptom_checkboxes():
 engine = pyttsx3.init()
 zira_voice = r"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
 engine.setProperty("voice", zira_voice)
-def speak(text):
-    engine.say(text)
-    engine.runAndWait()
+import threading
 
-# SQLite DB
+tts_lock = threading.Lock()
+
+import threading
+
+tts_lock = threading.Lock()
+
+import threading
+
+import threading
+import pyttsx3
+
+def speak(text):
+    def run_tts():
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 150)
+            engine.setProperty('volume', 1.0)
+            engine.say(text)
+            engine.runAndWait()
+        except Exception as e:
+            print(f"TTS Error: {e}")
+    threading.Thread(target=run_tts, daemon=True).start()
 conn = sqlite3.connect("diagnosis_history.db")
 cursor = conn.cursor()
 cursor.execute("""
@@ -2003,10 +2037,9 @@ def translate_ui():
     btn_delete.config(text=tr("Delete Selected Record"))
     for col in columns:
         record_table.heading(col, text=tr(col.capitalize()))
-    menu_labels[0].config(text="🏥 MediBox")
+    menu_labels[0].config(text="🏥Welcome to MediBox")
     menu_labels[1].config(text=tr("Diagnose illnesses based on your symptoms."))
-    menu_labels[2].config(text=tr("Click 'Diagnosis' to begin."))
-
+    menu_labels[2].config(text=tr("Click 'Diagnose' to begin."))
 def get_diagnosis(symptom_input, lang):
     input_symptoms = [s.strip().lower() for s in symptom_input.split(",") if s.strip()]
     input_symptoms_set = set(input_symptoms)
